@@ -25,18 +25,17 @@ remote_deploy:
 
 prepare:
 	@$(MKDIR) -p $(APP) $(DB) $(DB)/data $(DB)/log
-	@echo "Bundling the meteor environment..."
-
 	@$(CP) docker/app.docker $(APP)
 	@$(CP) docker/db.* $(DB)
 
 bundle:
+	@echo "Bundling the meteor environment..."
 	@$(METEOR) bundle tmp.tgz
 	@$(TAR) zxvf tmp.tgz
 	@$(RSYNC) -au bundle/. $(APP)
 	@$(RM) -rf bundle
 	@$(RM) tmp.tgz
-	
+
 app_image:
 	@cd $(APP); mv app.docker Dockerfile; $(DOCKER) build -t tchen/ts_app .
 
