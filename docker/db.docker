@@ -9,7 +9,7 @@ MAINTAINER Tyr Chen, tyr.chen@gmail.com
 EXPOSE 27017
 EXPOSE 28017
 
-ENV SCHEME=mongodb://localhost:27017/todos
+ENV SCHEME mongodb://localhost:27017/todos
 
 # Define an entry point
 ENTRYPOINT ["mongod", “-f”, “/data/mongodb.conf”]
