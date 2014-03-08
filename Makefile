@@ -24,7 +24,7 @@ remote_deploy:
 	@$(SSH) -t $(SERVER) "echo Deploy $(PROJECT) to the $(SERVER) server.; cd $(DEPLOY_PATH); make deploy;"
 
 prepare:
-	@$(MKDIR) -p $(APP) $(DB) $(DB)/data $(DB)/log
+	@$(MKDIR) -p $(APP) $(DB) $(DB)/db $(DB)/log
 	@$(CP) docker/app.docker $(APP)
 	@$(CP) docker/db.* $(DB)
 
