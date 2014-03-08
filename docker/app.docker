@@ -1,13 +1,5 @@
-FROM ubuntu
- 
-RUN apt-get install -y openssl vim tmux git-core curl
-RUN apt-get install -y python-software-properties python
-RUN add-apt-repository ppa:chris-lea/node.js
-RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get upgrade
-RUN apt-get install -y nodejs
-RUN curl https://install.meteor.com | /bin/sh -x
+FROM tchen/base-server
+MAINTAINER Tyr Chen, tyr.chen@gmail.com
 
 # set environment variables needed by teamspark
 ENV PORT 3000

@@ -7,7 +7,7 @@ PROJECT=teamspark
 DEPLOY_PATH=deployment/$(PROJECT)
 BUILD=build
 APP=$(BUILD)/app
-DB=$(BUILD)/db
+DB=$(BUILD)/data
 
 
 DOCKER=$(shell which docker)
@@ -24,20 +24,24 @@ remote_deploy:
 	@$(SSH) -t $(SERVER) "echo Deploy $(PROJECT) to the $(SERVER) server.; cd $(DEPLOY_PATH); make deploy;"
 
 prepare:
-	@$(MKDIR) -p $(APP) $(DB)
+	@$(MKDIR) -p $(APP) $(DB) $(DB)/data $(DB)/log
 	@echo "Bundling the meteor environment..."
+
+	@$(CP) docker/app.docker $(APP)
+	@$(CP) docker/db.* $(DB)
+
+bundle:
 	@$(METEOR) bundle tmp.tgz
 	@$(TAR) zxvf tmp.tgz
 	@$(RSYNC) -au bundle/. $(APP)
 	@$(RM) -rf bundle
-	@$(CP) docker/app.docker $(APP)
-	@$(CP) docker/db.* $(DB)
-
+	@$(RM) tmp.tgz
+	
 app_image:
-	@cd $(APP); $(DOCKER) build -t tchen/ts_app .
+	@cd $(APP); mv app.docker Dockerfile; $(DOCKER) build -t tchen/ts_app .
 
 db_image:
-	@cd $(DB); $(DOCKER) build -t tchen/ts_mongo .
+	@cd $(DB); mv db.docker Dockerfile; $(DOCKER) build -t tchen/ts_mongo .
 
 
 deploy: prepare app_image
